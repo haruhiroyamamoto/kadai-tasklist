@@ -8,6 +8,11 @@
     </head>
 
     <body>
+        
+       
+       
+        </div>
+        </div>
         <header class="mb-4">
             <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
                 {{-- トップページへのリンク --}}
@@ -29,8 +34,15 @@
         </header>
 
         <div class="container">
+             {{-- エラーメッセージ --}}
+            @include('commons.error_tasks')
+
             @yield('content')
+            
         </div>
+
+
+        <!-- JavaScriptの定義は省略 -->
 
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"></script>
