@@ -109,7 +109,7 @@ class TasksController extends Controller
     {
           // バリデーション
         $request->validate([
-            'status' => 'required|max:255',   // 追加
+            'status' => 'required|max:10',   // 追加
             
         ]);
          // idの値でタスクを検索して取得
