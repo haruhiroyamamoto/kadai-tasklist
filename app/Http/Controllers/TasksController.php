@@ -14,13 +14,21 @@ class TasksController extends Controller
      */
     public function index()
     {
-         // メッセージ一覧を取得
-        $tasks = Task::all();
+        $data = [];
+        if (\Auth::check()) { // 認証済みの場合
+            // 認証済みユーザを取得
+            $user = \Auth::user();
+            
+           //タスク一覧を取得
+        $tasks = $user->tasks()->get();
+         $data = [
+                'user' => $user,
+                'tasks' => $tasks,
+            ];
+        }
 
-        // メッセージ一覧ビューでそれを表示
-        return view('tasks.index', [
-            'tasks' => $tasks,
-        ]);
+        
+         return view('tasks.index', $data);
     }
 
     /**
@@ -52,11 +60,12 @@ class TasksController extends Controller
             
         ]);
          // タスクを作成
-        $task = new Task;
-         $task->status = $request->status; 
-        $task->content = $request->content;
-        $task->save();
+         $request->user()->tasks()->create([
         
+        'status' => $request->status,
+        'content' => $request->content,
+        
+        ]);
         
 
         // トップページへリダイレクトさせる
@@ -133,10 +142,12 @@ class TasksController extends Controller
     {
          // idの値でタスクを検索して取得
         $task = Task::findOrFail($id);
-        // タスクを削除
-        $task->delete();
+      // 認証済みユーザ（閲覧者）がその投稿の所有者である場合は、投稿を削除
+        if (\Auth::id() === $task->user_id) {
+            $task->delete();
+        }
 
-        // トップページへリダイレクトさせる
-        return redirect('/');
+        // 前のURLへリダイレクトさせる
+        return back();
     }
 }
